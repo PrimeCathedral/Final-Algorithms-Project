@@ -88,3 +88,15 @@ Node<T> &Node<T>::operator=(Node<T> &to_copy) {
   predecesor = to_copy.get_predecesor();
   return *this;
 }
+
+// This section is placed here to allow for hashing of Nodes in unordered maps
+// Although I understand what it is doing, I don't know the reason for every detail
+// I need to check up on this more.
+namespace std {
+    template <class T>
+    struct hash<Node<T>> {
+        size_t operator () (const Node<T>& key) {
+            return hash<std::string>()(key.get_name());
+        }
+    };
+}

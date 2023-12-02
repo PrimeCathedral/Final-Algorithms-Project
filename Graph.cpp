@@ -23,7 +23,7 @@ std::unordered_map<T, std::vector<Node<T>>> Graph<T>::get_adjacency_list()
 }
 
 template <class T>
-std::vector<std::vector<int>> Graph<T>::get_adjacency_matrix() const {
+std::unordered_map<Node<T>, std::unordered_map<Node<T>, int>> Graph<T>::get_adjacency_matrix() const {
   return adjacency_matrix;
 }
 
@@ -46,7 +46,7 @@ void Graph<T>::set_adjacency_list(
 
 template <class T>
 void Graph<T>::set_adjacency_matrix(
-    std::vector<std::vector<int>>& new_adjacency_matrix) {
+    std::unordered_map<Node<T>, std::unordered_map<Node<T>, int>>& new_adjacency_matrix) {
   adjacency_matrix = new_adjacency_matrix;
 }
 
@@ -153,17 +153,15 @@ std::vector<Node<T>> Graph<T>::create_vertices(std::string path_to_csv) {
 }
 
 template <class T>
-// std::vector<std::vector<int>>
-std::vector<std::vector<int>> Graph<T>::create_adjacency_matrix(
+std::unordered_map<Node<T>, std::unordered_map<Node<T>, int>> Graph<T>::create_adjacency_matrix(
     int graph_type, std::string path_to_csv) {
-  std::vector<std::vector<int>> adjacency_matrix(
-      vertices.size(), std::vector<int>(vertices.size(), 0));
+  std::unordered_map<Node<T>, std::unordered_map<Node<T>, int>> adjacency_matrix;
 
-  for (const auto& column : adjacency_matrix) {
-    for (const auto& row : column) {
-      std::cout << row << std::endl;
-    }
-  }
+  // for (const auto& column : adjacency_matrix.second) {
+  //   for (const auto& row : column.second) {
+  //     std::cout << row << std::endl;
+  //   }
+  // }
   // Open CSV file
   std::ifstream CSV_file(path_to_csv);
 }
