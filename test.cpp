@@ -4,7 +4,6 @@
 using namespace std;
 
 int main() {
-    Node<int> MyNode {Node<int>(5)};
-    cout << MyNode.get_name() << endl;
-    return 0;
+    Graph<int> MyGraph {Graph<int>("./directed_weighted_graph.csv")};
+
 }
