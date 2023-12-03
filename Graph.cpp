@@ -12,20 +12,10 @@
 
 // Getters
 template <class T>
-std::vector<Node<T>> Graph<T>::get_vertices() const {
-  return vertices;
-}
-
-template <class T>
 std::unordered_map<T, std::vector<std::pair<Node<T>, int>>> Graph<T>::get_adjacency_list()
     const {
   return adjacency_list;
 }
-
-// template <class T>
-// std::unordered_map<Node<T>, std::unordered_map<Node<T>, int>> Graph<T>::get_adjacency_matrix() const {
-//   return adjacency_matrix;
-// }
 
 template <class T>
 int Graph<T>::get_graph_type() const {
@@ -34,21 +24,10 @@ int Graph<T>::get_graph_type() const {
 
 // Setters
 template <class T>
-void Graph<T>::set_vertices(std::vector<Node<T>>& new_vertices) {
-  vertices = new_vertices;
-}
-
-template <class T>
 void Graph<T>::set_adjacency_list(
     std::unordered_map<T, std::vector<std::pair<Node<T>, int>>>& new_adjacency_list) {
   adjacency_list = new_adjacency_list;
 }
-
-// template <class T>
-// void Graph<T>::set_adjacency_matrix(
-//     std::unordered_map<Node<T>, std::unordered_map<Node<T>, int>>& new_adjacency_matrix) {
-//   adjacency_matrix = new_adjacency_matrix;
-// }
 
 template <class T>
 void Graph<T>::set_graph_type(int new_graph_type) {
@@ -58,13 +37,10 @@ void Graph<T>::set_graph_type(int new_graph_type) {
 // Constructors
 template <class T>
 Graph<T>::Graph()
-    : vertices{}, adjacency_list{}, /*adjacency_matrix{},*/ graph_type{1} {}
+    : adjacency_list{}, graph_type{1} {}
 
 template <class T>
-Graph<T>::Graph(const Graph<T>& to_copy)
-    : vertices{to_copy.get_vertices()},
-      adjacency_list{to_copy.get_adjacency_list()} /*,
-      adjacency_matrix{to_copy.get_adjacency_matrix()} */ {}
+Graph<T>::Graph(const Graph<T>& to_copy): adjacency_list{to_copy.get_adjacency_list()}, graph_type{to_copy.get_graph_type()} {}
 
 template <class T>
 Graph<T>::Graph(std::string new_path_to_csv) {
@@ -114,51 +90,54 @@ Graph<T>::Graph(std::string new_path_to_csv) {
 // template <class T>
 // Graph& Graph<T>::operator=(const Graph& to_copy);
 
+// template <class T>
+// std::vector<Node<T>> Graph<T>::create_vertices(std::string path_to_csv) {
+//   std::vector<Node<int>> vertices;
+
+//   // Open CSV file
+//   std::ifstream csv_file(path_to_csv);
+
+//   // Helper variables
+//   std::string line;
+//   int val;
+//   bool is_there{false};
+
+//   // Ignore the header line
+//   std::getline(csv_file, line);
+
+//   // Read data, line by line
+//   while (std::getline(csv_file, line)) {
+//     // Create a stringstream of the current line
+//     std::stringstream ss(line);
+
+//     // Extract each value
+//     while (ss >> val) {
+//       // Set is_there to false
+//       is_there = false;
+
+//       // Make sure the vertex has not been created before creating it.
+//       for (const auto& vertex : vertices) {
+//         if (vertex.get_name() == val) is_there = true;
+//       }
+
+//       if (!(is_there)) vertices.emplace_back(Node<int>(val));
+
+//       // if the next token is a comma, ignore it and move on
+//       if (ss.peek() == ',') ss.ignore();
+//     }
+//   }
+//   // Close the file
+//   csv_file.close();
+//   return vertices;
+// }
+
 template <class T>
-std::vector<Node<T>> Graph<T>::create_vertices(std::string path_to_csv) {
-  std::vector<Node<int>> vertices;
+std::unordered_map<Node<T>, std::vector<std::pair<Node<T>, int>>> Graph<T>::create_adjacency_list(std::string path_to_csv) {
+  // Create map to place all vertices in
+  std::unordered_map<T, Node<T>> Vertices;
 
-  // Open CSV file
-  std::ifstream csv_file(path_to_csv);
+  std::unordered_map<Node<T>, std::vector<std::pair<Node<T>, int>>> adjacency_list;
 
-  // Helper variables
-  std::string line;
-  int val;
-  bool is_there{false};
-
-  // Ignore the header line
-  std::getline(csv_file, line);
-
-  // Read data, line by line
-  while (std::getline(csv_file, line)) {
-    // Create a stringstream of the current line
-    std::stringstream ss(line);
-
-    // Extract each value
-    while (ss >> val) {
-      // Set is_there to false
-      is_there = false;
-
-      // Make sure the vertex has not been created before creating it.
-      for (const auto& vertex : vertices) {
-        if (vertex.get_name() == val) is_there = true;
-      }
-
-      if (!(is_there)) vertices.emplace_back(Node<int>(val));
-
-      // if the next token is a comma, ignore it and move on
-      if (ss.peek() == ',') ss.ignore();
-    }
-  }
-  // Close the file
-  csv_file.close();
-  return vertices;
-}
-
-template <class T>
-std::unordered_map<T, std::vector<std::pair<Node<T>, int>>> Graph<T>::create_adjacency_list(std::string path_to_csv) {
-  // Create adjacency list map
-  std::unordered_map<T, std::vector<std::pair<Node<T>, int>>> adjacency_list;
 
   // Open CSV file
   std::ifstream csv_file(path_to_csv);
@@ -167,6 +146,7 @@ std::unordered_map<T, std::vector<std::pair<Node<T>, int>>> Graph<T>::create_adj
   std::string line;
   int source, target, weight;
 
+
   // Ignore the header line
   std::getline(csv_file, line);
 
@@ -175,36 +155,18 @@ std::unordered_map<T, std::vector<std::pair<Node<T>, int>>> Graph<T>::create_adj
     // Create a stringstream of the current line
     std::stringstream ss(line);
 
-    // Populate source and target
     ss >> source;
-    ss.ignore(); // Ignore the comma
-    ss >> target;
-
-    // Populate weight depending on if graph is weighted
-    if (graph_type % 3 == 0) {
-      ss.ignore(); // ignore the second comma
-      ss >> weight;
-    } else {
-      weight = 1;
+    if (Vertices.find(source) == Vertices.end()) {
+      Vertices[source] = Node<T>(source);
     }
+    ss.ignore(); // The comma
 
-    // If directed
-    if (graph_type % 2 == 0) {
-      adjacency_list[source].emplace_back(std::pair<Node<T>, int>(target, weight));
-    } else {
-      adjacency_list[source].emplace_back(std::pair<Node<T>, int>(target, weight));
-      adjacency_list[target].emplace_back(std::pair<Node<T>, int>(source, weight));
+    ss >> source;
+    if (Vertices.find(source) == Vertices.end()) {
+      Vertices[source] = Node<T>(source);
     }
   }
   // Close the file
   csv_file.close();
-
-  for (const auto& list : adjacency_list) {
-    for (const auto& pair : list.second) {
-      std::cout << "Source: " << list.first << " , Target: " << pair.first.get_name() << " , Weight:" << pair.second << std::endl;      
-    }
-    std::cout << std::endl;
-  }
-
   return adjacency_list;
 }

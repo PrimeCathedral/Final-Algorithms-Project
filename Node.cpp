@@ -81,7 +81,7 @@ template <class T>
 Node<T>::~Node() {}
 
 template <class T>
-Node<T> &Node<T>::operator=(Node<T> &to_copy) {
+Node<T>& Node<T>::operator=(Node<T> &to_copy) {
   name = to_copy.get_name();
   color = to_copy.get_color();
   distance = to_copy.get_distance();
@@ -89,14 +89,33 @@ Node<T> &Node<T>::operator=(Node<T> &to_copy) {
   return *this;
 }
 
-// // This section is placed here to allow for hashing of Nodes in unordered maps
-// // Although I understand what it is doing, I don't know the reason for every detail
-// // I need to check up on this more.
-// namespace std {
-//     template <class T>
-//     struct hash<Node<T>> {
-//         size_t operator () (const Node<T>& key) {
-//             return hash<int>()(key.get_name());
-//         }
-//     };
-// }
+template<class T>
+bool Node<T>::operator==(Node<T> &to_compare) {
+  if (name   == to_compare.get_name() &&
+      color  == to_compare.get_color()){
+        return true;
+      }
+      else return false;
+}
+
+template<class T>
+bool Node<T>::operator==(const Node<T> &to_compare) const {
+  if (name   == to_compare.get_name() &&
+      color  == to_compare.get_color()){
+        return true;
+      }
+      else return false;
+}
+
+// This section is placed here to allow for hashing of Nodes in unordered maps
+// Although I understand what it is doing, I don't know the reason for every detail
+// I need to check up on this more.
+namespace std {
+    // template <>
+    template<class T>
+    struct hash<Node<T>> {
+        auto operator () (const Node<T>& key) const -> size_t {
+            return hash<int>()(key.get_name());
+        }
+    };
+}

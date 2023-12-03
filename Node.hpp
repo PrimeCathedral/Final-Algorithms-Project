@@ -35,6 +35,8 @@ class Node {
 
   // Members
   Node<T> &operator=(Node<T> &to_copy);
+  bool operator==(Node<T> &to_compare);
+  bool operator==(const Node<T> &to_compare) const;
 };
 
 #include "Node.cpp"
