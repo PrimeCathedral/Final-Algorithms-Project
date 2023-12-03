@@ -34,7 +34,7 @@ class Node {
     ~Node();
 
     // Methods
-    // Node operator = (const Node& to_copy);
-    // bool operator == (const Node& to_compare) const;
+    void operator = (const Node& to_copy);
+    bool operator == (const Node& to_compare) const;
 };
 #endif
