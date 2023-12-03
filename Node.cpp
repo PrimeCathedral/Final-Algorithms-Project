@@ -52,6 +52,7 @@ Node::~Node() {
 }
 
 void Node::operator = (const Node& to_copy) {
+  value       = to_copy.get_value();
   color       = to_copy.get_color();
   init_time   = to_copy.get_init_time();
   final_time  = to_copy.get_final_time();
@@ -60,6 +61,7 @@ void Node::operator = (const Node& to_copy) {
   predecesor  = to_copy.get_predecesor();
 }
 bool Node::operator == (const Node& to_compare) const {
+  if (value       != to_compare.get_value()) return false;
   if (color       != to_compare.get_color()) return false;
   if (init_time   != to_compare.get_init_time()) return false;
   if (final_time  != to_compare.get_final_time()) return false;

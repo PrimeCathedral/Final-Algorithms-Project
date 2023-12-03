@@ -37,4 +37,16 @@ class Node {
     void operator = (const Node& to_copy);
     bool operator == (const Node& to_compare) const;
 };
+
+
+// This section is for being able to hash nodes int a hash-map
+namespace std {
+  template<>
+  struct hash<Node> {
+    auto operator () (const Node& key) const -> size_t {
+      return hash<int>()(key.get_value());
+    }
+  };
+}
+
 #endif
