@@ -1,121 +1,49 @@
 #include <iostream>
 #include <string>
+#include "Node.hpp"
+
 // Getters
-template <class T>
-T Node<T>::get_name() const {
-  return name;
+int Node::get_value()       const {
+  return value;
 }
-
-template <class T>
-std::string Node<T>::get_color() const {
-  return color;
+int Node::get_init_time()   const {
+  return init_time;
 }
-
-template <class T>
-int Node<T>::get_distance() const {
+int Node::get_final_time()  const {
+  return final_time;
+}
+int Node::get_distance()    const {
   return distance;
 }
-
-template <class T>
-Node<T> *Node<T>::get_predecesor() const {
+std::string Node::get_color() const {
+  return color;
+}
+Node* Node::get_predecesor()  const {
   return predecesor;
 }
 
+
+
 // Setters
-
-template <class T>
-void Node<T>::set_name(T new_name) {
-  name = new_name;
+void Node::set_value(int new_value) {
+  value = new_value;
 }
-
-template <class T>
-void Node<T>::set_color(std::string new_color) {
-  color = new_color;
+void Node::set_init_time(int new_init_time) {
+  init_time = new_init_time;
 }
-
-template <class T>
-void Node<T>::set_distance(int new_distance) {
+void Node::set_final_time(int new_final_time) {
+  final_time = new_final_time;
+}
+void Node::set_distance(int new_distance) {
   distance = new_distance;
 }
-
-template <class T>
-void Node<T>::set_predecesor(Node &new_predecesor) {
-  predecesor = new_predecesor;
+void Node::set_color(std::string new_color) {
+  color = new_color;
+}
+void Node::set_predecesor(Node& new_predecesor) {
+  predecesor = &new_predecesor;
 }
 
-// Constructors
-template <class T>
-Node<T>::Node()
-    : name{}, color{""}, distance{MAX_DISTANCE}, predecesor{nullptr} {}
-
-template <class T>
-Node<T>::Node(T new_name)
-    : name{new_name},
-      color{"white"},
-      distance{MAX_DISTANCE},
-      predecesor{nullptr} {}
-
-template <class T>
-Node<T>::Node(std::string new_color, int new_distance, Node &new_predecesor)
-    : name{""},
-      color{new_color},
-      distance{new_distance},
-      predecesor{new_predecesor} {}
-
-template <class T>
-Node<T>::Node(T new_name, std::string new_color, int new_distance,
-              Node &new_predecesor)
-    : name{new_name},
-      color{new_color},
-      distance{new_distance},
-      predecesor{new_predecesor} {}
-
-template <class T>
-Node<T>::Node(const Node<T> &to_copy)
-    : name{to_copy.get_name()},
-      color{to_copy.get_color()},
-      distance{to_copy.get_distance()},
-      predecesor{to_copy.get_predecesor()} {}
-
-template <class T>
-Node<T>::~Node() {}
-
-template <class T>
-Node<T>& Node<T>::operator=(Node<T> &to_copy) {
-  name = to_copy.get_name();
-  color = to_copy.get_color();
-  distance = to_copy.get_distance();
-  predecesor = to_copy.get_predecesor();
-  return *this;
-}
-
-template<class T>
-bool Node<T>::operator==(Node<T> &to_compare) {
-  if (name   == to_compare.get_name() &&
-      color  == to_compare.get_color()){
-        return true;
-      }
-      else return false;
-}
-
-template<class T>
-bool Node<T>::operator==(const Node<T> &to_compare) const {
-  if (name   == to_compare.get_name() &&
-      color  == to_compare.get_color()){
-        return true;
-      }
-      else return false;
-}
-
-// This section is placed here to allow for hashing of Nodes in unordered maps
-// Although I understand what it is doing, I don't know the reason for every detail
-// I need to check up on this more.
-namespace std {
-    // template <>
-    template<class T>
-    struct hash<Node<T>> {
-        auto operator () (const Node<T>& key) const -> size_t {
-            return hash<int>()(key.get_name());
-        }
-    };
-}
+Node::Node() : value{}, init_time{}, final_time{}, distance{}, color{}, predecesor{} {}
+Node::Node(int new_value) : value{new_value}, init_time{}, final_time{}, distance{}, color{}, predecesor{} {}
+Node::Node(const Node& to_copy) : value{to_copy.get_value()}, init_time{to_copy.get_init_time()}, final_time{to_copy.get_final_time()}, distance{to_copy.get_distance()}, color{to_copy.get_color()}, predecesor{to_copy.get_predecesor()} {}

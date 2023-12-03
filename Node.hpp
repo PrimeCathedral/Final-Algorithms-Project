@@ -4,40 +4,37 @@
 #include <iostream>
 #include <string>
 
-template <class T>
+
 class Node {
- private:
-  T name;
-  std::string color;
-  int distance;
-  Node<T> *predecesor;
+  private:
+    int value, init_time, final_time, distance;
+    std::string color;
+    Node* predecesor;
+  public:
+    // Getters
+    int get_value() const;
+    int get_init_time() const;
+    int get_final_time() const;
+    int get_distance() const;
+    std::string get_color() const;
+    Node* get_predecesor() const;
 
- public:
-  // Getters
-  T get_name() const;
-  std::string get_color() const;
-  int get_distance() const;
-  Node<T> *get_predecesor() const;
+    // Setters
+    void set_value(int new_value);
+    void set_init_time(int new_init_time);
+    void set_final_time(int new_final_time);
+    void set_distance(int new_distance);
+    void set_color(std::string new_color);
+    void set_predecesor(Node& new_predecesor);
 
-  // Setters
-  void set_name(T new_name);
-  void set_color(std::string new_color);
-  void set_distance(int new_distance);
-  void set_predecesor(Node &new_predecesor);
+    // Constructors
+    Node();
+    Node(int new_value);
+    Node(const Node& to_copy);
+    ~Node();
 
-  // Constructors
-  Node();
-  Node(T new_name);
-  Node(std::string new_color, int new_distance, Node &predecesor);
-  Node(T new_name, std::string new_color, int new_distance, Node &predecesor);
-  Node(const Node<T> &to_copy);
-  ~Node();
-
-  // Members
-  Node<T> &operator=(Node<T> &to_copy);
-  bool operator==(Node<T> &to_compare);
-  bool operator==(const Node<T> &to_compare) const;
+    // Methods
+    // Node operator = (const Node& to_copy);
+    // bool operator == (const Node& to_compare) const;
 };
-
-#include "Node.cpp"
 #endif
