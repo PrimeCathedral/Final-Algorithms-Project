@@ -35,13 +35,14 @@ int main() {
     // testing constructing graph from csv (make sure to add CLI support!!!)
     Graph CSV_graph {Graph("./directed_weighted_graph.csv")};
 
-    // for (const auto& Source_Vector_pair : CSV_graph.get_Adjacency_List()) {
-    //     for (const auto& Target_Weight_pair : Source_Vector_pair.second) {
-    //         std::cout   << "Source: " << Source_Vector_pair.first->get_value()
-    //                     << " Target: " << Target_Weight_pair.first->get_value()
-    //                     << " Weight: " << Target_Weight_pair.second << std::endl; 
-    //     }  
-    // }
+    for (const auto& Source_Vector_pair : CSV_graph.get_Adjacency_List()) {
+        for (const auto& Target_Weight_pair : Source_Vector_pair.second) {
+            std::cout   << "Source: " << Source_Vector_pair.first->get_value()
+                        << " Address: " << &*Target_Weight_pair.first
+                        << " Target: " << Target_Weight_pair.first->get_value()
+                        << " Weight: " << Target_Weight_pair.second << std::endl; 
+        }  
+    }
 
 
 
@@ -51,6 +52,8 @@ int main() {
 
 
     visualizeDFSTree(DFS_Tree);
-    // std::cout << "Here?" << std::endl;
+    
+    std::cout << bool(CycleDetection(DFS_Tree)) << std::endl;
+
     return 0;
 }

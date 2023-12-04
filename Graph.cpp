@@ -10,6 +10,13 @@ Vertices_Map& Graph::get_Vertices() {
 Adjacency_List_Map& Graph::get_Adjacency_List(){
     return Adjacency_List;
 }
+Vertices_Map Graph::get_Vertices() const {
+    return Vertices;
+}
+Adjacency_List_Map Graph::get_Adjacency_List() const {
+    return Adjacency_List;
+}
+// Returns the graph type
 int Graph::get_graph_type() const {
     return graph_type;
 }
@@ -36,7 +43,7 @@ Graph::Graph(const Graph& to_copy) : Vertices{to_copy.Vertices} {
         // and find its corresponding node in the Vertices
         // Map, save the address of that vertex to be used 
         // as the key for the new adjacency list.
-        int source_value {Node_Vector_pair.first-> get_value()};
+        int source_value {Node_Vector_pair.first->get_value()};
         Node* Source_Node {&Vertices[source_value]};
         // for each pair in the value vector
         for (const auto& Weight_pair : Node_Vector_pair.second) {   

@@ -39,6 +39,10 @@ class Graph {
         Vertices_Map& get_Vertices();
         // Returns an adjacency list that uses Node pointers as keys
         Adjacency_List_Map& get_Adjacency_List();
+        // Returns a map of nodes (vertices) where they is their int value
+        Vertices_Map get_Vertices() const;
+        // Returns an adjacency list that uses Node pointers as keys
+        Adjacency_List_Map get_Adjacency_List() const;
         // Returns the graph type
         int get_graph_type() const ;
 

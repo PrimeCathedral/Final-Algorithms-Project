@@ -49,47 +49,51 @@ Graph BFS(Graph& to_traverse, Node& source_node) {
 
         // Explore adjacent nodes
         for (const auto& Target_Weight_pair : BFS.get_Adjacency_List()[current_Node]) {
+            if (Target_Weight_pair.first->get_value() == 5) std::cout << "hello" << std::endl;
             if (Target_Weight_pair.first->get_color() == "white") {
                 Target_Weight_pair.first->set_color("gray");
                 Target_Weight_pair.first->set_distance(current_Node->get_distance() + 1);
                 Target_Weight_pair.first->set_predecesor(Q.front()); // This line causes issues and is not necessary yet, so commented out
                 Target_Weight_pair.first->set_is_removable(false);
                 Q.push_back(Target_Weight_pair.first); // Might be an error here
-            } else {
-                // Remove pairs containing the current node from the adjacency list
-                auto current_pair = std::remove_if(
-                    BFS.get_Adjacency_List()[current_Node].begin(),
-                    BFS.get_Adjacency_List()[current_Node].end(),
-                    [&Target_Weight_pair](const std::pair<Node*, int>& element) {
-                        return element.first == Target_Weight_pair.first;
-                    }
-                );
-                BFS.get_Adjacency_List()[current_Node].erase(current_pair);
-            }
+            } 
+            // else {
+            //     // Remove pairs containing the current node from the adjacency list
+            //     auto current_pair = std::remove_if(
+            //         BFS.get_Adjacency_List()[current_Node].begin(),
+            //         BFS.get_Adjacency_List()[current_Node].end(),
+            //         [&Target_Weight_pair](const std::pair<Node*, int>& element) {
+            //             return element.first == Target_Weight_pair.first;
+            //         }
+            //     );
+            //     BFS.get_Adjacency_List()[current_Node].erase(current_pair);
+            // }
         }
 
         // Set the color of the current node to black after exploration
         current_Node->set_color("black");
     }
 
-    // Remove all non-essential nodes from the BFS graph
-    for (auto it = BFS.get_Vertices().begin(); it != BFS.get_Vertices().end();) {
-        if (it->second.get_is_removable()) {
-            // Remove the node and associated pairs from the adjacency list
-            BFS.get_Adjacency_List().erase(&BFS.get_Vertices()[it->second.get_value()]);
-            it = BFS.get_Vertices().erase(it);
-        } else {
-            ++it;
-        }
-    }
+    // // Remove all non-essential nodes from the BFS graph
+    // for (auto it = BFS.get_Vertices().begin(); it != BFS.get_Vertices().end();) {
+    //     if (it->second.get_is_removable()) {
+    //         // Remove the node and associated pairs from the adjacency list
+    //         BFS.get_Adjacency_List().erase(&BFS.get_Vertices()[it->second.get_value()]);
+    //         it = BFS.get_Vertices().erase(it);
+    //     } else {
+    //         ++it;
+    //     }
+    // }
 
     // Print the resulting adjacency list
     std::cout << std::endl << "BFS GRAPH" << std::endl;
     for (const auto& Source_Vector_pair : BFS.get_Adjacency_List()) {
         for (const auto& Target_Weight_pair : Source_Vector_pair.second) {
-            std::cout   << "Source: " << Source_Vector_pair.first->get_value()
-                        << " Target: " << Target_Weight_pair.first->get_value()
-                        << " Weight: " << Target_Weight_pair.second << std::endl;
+            std::cout   << "Address: "  << &Source_Vector_pair.first
+                        << ", Source: "   << Source_Vector_pair.first->get_value()
+                        << ", Address: "  << &Target_Weight_pair.first
+                        << ", Target: "  << Target_Weight_pair.first->get_value()
+                        << ", Weight: "  << Target_Weight_pair.second << std::endl;
         }
     }
 
@@ -100,7 +104,7 @@ Graph BFS(Graph& to_traverse, Node& source_node) {
 
 // Function to perform DFS visit on a graph starting from a given source node
 // The function uses recursion to traverse the graph depth-first
-Graph& DFS_visit(Graph& DFS, Node& source_node, int& time) {
+Graph& DFS_visit(Graph& DFS, Node& source_node, int& time, bool& is_cycled) {
     // Mark the source node as visited and set initial time
     source_node.set_color("gray");
     source_node.set_init_time(++time);
@@ -119,7 +123,9 @@ Graph& DFS_visit(Graph& DFS, Node& source_node, int& time) {
             vertex.first->set_predecesor(&source_node);
 
             // Recursive call to DFS_visit for the adjacent node
-            DFS_visit(DFS, *vertex.first, time);
+            DFS_visit(DFS, *vertex.first, time, is_cycled);
+        } else if (vertex.first->get_color() == "gray") {
+            is_cycled = true;
         }
     }
 
@@ -132,6 +138,7 @@ Graph& DFS_visit(Graph& DFS, Node& source_node, int& time) {
 
 Graph DFS(Graph& to_traverse) {
     Graph DFS {to_traverse};
+    bool is_cycled {false};
 
     for (auto& vertex : DFS.get_Vertices()) {
         vertex.second.set_color("white");
@@ -142,12 +149,12 @@ Graph DFS(Graph& to_traverse) {
 
     for (auto& vertex : DFS.get_Vertices()) {
         if (vertex.second.get_color() == "white") {
-            DFS_visit(DFS, vertex.second, time);
+            DFS_visit(DFS, vertex.second, time, is_cycled);
         }
     }
 
     std::cout << std::endl << "DFS Graph" << std::endl;
-    for (auto& SVP : to_traverse.get_Vertices()) {
+    for (auto& SVP : DFS.get_Vertices()) {
         std::cout   << "Node address: "     << &SVP.second                   
                     << ", Value: "          << SVP.second.get_value() 
                     << ", Initial time: "   << SVP.second.get_init_time()
@@ -157,24 +164,54 @@ Graph DFS(Graph& to_traverse) {
 
     return DFS;
 }
+bool DFS(const Graph& to_traverse){
+    Graph DFS {to_traverse};
+    bool is_cycled {false};
+
+    for (auto& vertex : DFS.get_Vertices()) {
+        vertex.second.set_color("white");
+        vertex.second.set_predecesor(nullptr);
+    }
+
+    int time {0};
+
+    for (auto& vertex : DFS.get_Vertices()) {
+        if (vertex.second.get_color() == "white") {
+            DFS_visit(DFS, vertex.second, time, is_cycled);
+        }
+    }
+
+    std::cout << std::endl << "DFS Graph" << std::endl;
+    for (auto& SVP : DFS.get_Vertices()) {
+        std::cout   << "Node address: "     << &SVP.second                   
+                    << ", Value: "          << SVP.second.get_value() 
+                    << ", Initial time: "   << SVP.second.get_init_time()
+                    << ", Final time: "     << SVP.second.get_final_time() 
+                    << std::endl;
+    }
+
+    return is_cycled; 
+}
 
 // Function to visualize the DFS tree contained in the graph
 // This function was made by ChatGPT
 void visualizeDFSTree(Graph& G) {
-    std::cout << "DFS Tree Visualization:" << std::endl;
+    std::cout << std::endl << "DFS Tree Visualization:" << std::endl;
 
     for (auto& vertex : G.get_Vertices()) {
-        Node& current_node = vertex.second;
-        Node* predecessor = current_node.get_predecesor();
 
         // Print node value and its predecessor's value (if any)
         std::cout << "Node " << vertex.second.get_value() << " ";
-        if (predecessor) {
-            std::cout << "← " << current_node.get_predecesor()->get_value();
+        if (vertex.second.get_predecesor()) {
+            std::cout << "← " << vertex.second.get_predecesor()->get_value();
         } else {
             std::cout << "(Root)";
         }
 
         std::cout << std::endl;
     }
+}
+
+bool CycleDetection(const Graph& to_detect) {
+    return DFS(to_detect);
 }
