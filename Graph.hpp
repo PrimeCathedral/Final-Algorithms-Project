@@ -15,7 +15,7 @@ class Graph {
         Vertices_Map Vertices;
 
         ///////////////////////////////////////////////////////////////////////////////
-        // Adjacency List is an onordered map that uses a Source Node pointer as key //
+        // Adjacency List is an unordered map that uses a Source Node pointer as key //
         // and has a vector of std::pairs composed of Target Node pointers, and the  //
         // weight for traveling from Source Node ptr to Target Node ptr.             //
         ///////////////////////////////////////////////////////////////////////////////
@@ -36,10 +36,9 @@ class Graph {
         // Getters
 
         // Returns a map of nodes (vertices) where they is their int value
-        Vertices_Map get_Vertices() const;
+        const Vertices_Map& get_Vertices() const;
         // Returns an adjacency list that uses Node pointers as keys
-        Adjacency_List_Map get_Adjacency_List() const;
-
+        const Adjacency_List_Map& get_Adjacency_List() const;
         // Returns the graph type
         int get_graph_type() const ;
 

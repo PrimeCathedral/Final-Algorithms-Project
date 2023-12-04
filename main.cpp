@@ -4,6 +4,7 @@
 
 #include "Graph.hpp"
 #include "Node.hpp"
+#include "Algorithms.cpp"
 
 int main() {
     Vertices_Map MyVertices {};
@@ -15,9 +16,9 @@ int main() {
     MyGraph[&MyVertices[2]].emplace_back(std::pair<Node*, int>(&MyVertices[3], 7));
     MyGraph[&MyVertices[3]].emplace_back(std::pair<Node*, int>(&MyVertices[4], 14));
 
-    for (const auto& pair : MyGraph) {
-        std::cout << pair.first->get_value() << std::endl;
-    }
+    // for (const auto& pair : MyGraph) {
+    //     std::cout << pair.first->get_value() << std::endl;
+    // }
 
     // Testing Graph deep_copy
     Graph Real_Graph;
@@ -27,9 +28,9 @@ int main() {
     Graph Copy_graph {Real_Graph};
 
     // Even though they are copies, the maps should not be using the same pointers as keys
-    if (Copy_graph.get_Adjacency_List().find(&MyVertices[2]) == Copy_graph.get_Adjacency_List().end()) {
-        std::cout << "Not the same key" << std::endl;
-    }
+    // if (Copy_graph.get_Adjacency_List().find(&MyVertices[2]) == Copy_graph.get_Adjacency_List().end()) {
+    //     std::cout << "Not the same key" << std::endl;
+    // }
 
     // testing constructing graph from csv (make sure to add CLI support!!!)
     Graph CSV_graph {Graph("./directed_weighted_graph.csv")};
@@ -41,5 +42,11 @@ int main() {
                         << " Weight: " << Target_Weight_pair.second << std::endl; 
         }  
     }
+
+
+
+    std::cout << std::endl << "BFS TREE" << std::endl << std::endl;
+    Graph BFS_Tree {BFS(CSV_graph, CSV_graph.get_Vertices()[1])};
+
     return 0;
 }

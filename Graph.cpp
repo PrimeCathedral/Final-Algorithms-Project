@@ -4,10 +4,10 @@
 #include "Graph.hpp"
 
 // Getters
-Vertices_Map Graph::get_Vertices() const {
+const Vertices_Map& Graph::get_Vertices() const {
     return Vertices;
 }
-Adjacency_List_Map Graph::get_Adjacency_List() const {
+const Adjacency_List_Map& Graph::get_Adjacency_List() const {
     return Adjacency_List;
 }
 int Graph::get_graph_type() const {

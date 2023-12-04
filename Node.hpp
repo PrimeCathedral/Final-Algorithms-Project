@@ -10,6 +10,7 @@ class Node {
     int value, init_time, final_time, distance;
     std::string color;
     Node* predecesor;
+    bool is_removable;
   public:
     // Getters
     int get_value() const;
@@ -18,6 +19,7 @@ class Node {
     int get_distance() const;
     std::string get_color() const;
     Node* get_predecesor() const;
+    bool get_is_removable() const;
 
     // Setters
     void set_value(int new_value);
@@ -25,7 +27,8 @@ class Node {
     void set_final_time(int new_final_time);
     void set_distance(int new_distance);
     void set_color(std::string new_color);
-    void set_predecesor(Node& new_predecesor);
+    void set_predecesor(Node* new_predecesor);
+    void set_is_removable(bool new_is_removable);
 
     // Constructors
     Node();
