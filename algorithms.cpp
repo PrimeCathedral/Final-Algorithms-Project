@@ -1,6 +1,8 @@
 #include <iostream>
 #include <deque>
 #include <list>
+#include <algorithm>
+#include <set>
 #include "Graph.hpp"
 #include "Node.hpp"
 
@@ -283,3 +285,124 @@ std::list<Node*> TopologicalSort(Graph& to_create) {
     return Topo_List;
 }
 
+struct Edge { // This owuld have been way easier to implement from the beggining
+    Node* Source, *Target;
+    int Weight;
+
+    Edge(Node* new_Source, Node* new_Target, int new_Weight) : Source{new_Source}, Target{new_Target}, Weight{new_Weight} {}
+};
+
+bool cmp(const Edge& a, const Edge& b) {
+    if (a.Weight < b.Weight) return true;
+    return false;
+}
+
+// void Prims(const Graph& to_min_span) {
+//     if (to_min_span.get_graph_type() % 2 == 0) {
+//         std::cout << "Cannot use Prims. Graph must be undirected." << std::endl;
+//         return;
+//     }
+//     Graph K {to_min_span};
+//     std::vector<Edge> Edges;
+//     std::set<Node*> S;
+//     // std::vector<std::set<Node*>> Sets(K.get_Vertices().size());
+//     // std::vector<Node*> Vertices;
+
+//     for (auto& VNP : K.get_Vertices()) {
+//         VNP.second.set_is_removable(true);
+//     }
+
+//     // for (auto& VNP : K.get_Vertices()) {
+//     //     Sets.emplace_back(std::set<Node*>());
+//     //     std::set<Node*> MySet {};
+//     //     MySet.insert(&VNP.second);
+//     //     Sets.insert(Sets.begin() + VNP.second.get_value(), MySet);
+//     // }
+
+//     // for (const auto& Set : Sets) {
+//     //     for (const auto& element : Set) {
+//     //         std::cout << element->get_value() << std::endl;
+//     //     }
+//     // }
+
+//     for (const auto& SVP : K.get_Adjacency_List()) {
+//         for (const auto& TWP : SVP.second) {
+//             Edges.emplace_back(Edge(SVP.first, TWP.first, TWP.second));
+//         } 
+//     }
+
+//     std::sort(Edges.begin(), Edges.end(), cmp);
+
+//     // for (int i = 0; i < Edges.size(); i++) {
+//     //     std::cout   << " Source: " << Edges[i].Source->get_value()
+//     //                 << " Target: " << Edges[i].Target->get_value()
+//     //                 << " Weight: " << Edges[i].Weight << std::endl;
+//     // }
+
+//     S.insert(&K.get_Vertices()[0]);
+//     K.get_Vertices()[0].set_is_removable(false);
+//     std::vector<Edge> F {};
+
+//     while(S.size() != K.get_Vertices().size()) {
+        
+//     }
+
+
+
+
+
+// }
+
+#include <iostream>
+#include <unordered_set>
+#include <queue>
+#include <limits>
+
+Graph PrimMST(const Graph& graph) {
+    Graph minSpanningTree;
+    std::unordered_set<Node*> visitedNodes;
+
+    // Choose a starting node arbitrarily (or based on some logic)
+    Node* startNode = selectStartingNode(graph);
+
+    if (!startNode) {
+        std::cerr << "Error: Graph is empty." << std::endl;
+        return minSpanningTree;
+    }
+
+    visitedNodes.insert(startNode);
+
+    // Priority queue to store edges ordered by weight
+    std::priority_queue<std::pair<int, std::pair<Node*, Node*>>,
+                        std::vector<std::pair<int, std::pair<Node*, Node*>>>,
+                        std::greater<int>> edgeQueue;
+
+    // Add all edges connected to the starting node to the priority queue
+    for (const auto& edge : graph.get_Adjacency_List().at(startNode)) {
+        edgeQueue.push({edge.second, {startNode, edge.first}});
+    }
+
+    while (!edgeQueue.empty() && visitedNodes.size() < graph.get_Vertices().size()) {
+        auto edge = edgeQueue.top();
+        edgeQueue.pop();
+
+        Node* sourceNode = edge.second.first;
+        Node* targetNode = edge.second.second;
+
+        if (visitedNodes.find(targetNode) == visitedNodes.end()) {
+            visitedNodes.insert(targetNode);
+            minSpanningTree.get_Adjacency_List()[sourceNode].emplace_back(targetNode, edge.first);
+            minSpanningTree.get_Adjacency_List()[targetNode].emplace_back(sourceNode, edge.first);
+        }
+    }
+
+    return minSpanningTree;
+}
+
+Node* selectStartingNode(const Graph& graph) {
+    if (!graph.get_Vertices().empty()) {
+        // Choose the first node as the starting node
+        return &graph.get_Vertices().begin()->second;
+    }
+    return nullptr;
+}

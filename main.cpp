@@ -63,5 +63,14 @@ int main() {
         if(MyList.empty()) std::cout << "end" << std::endl;
     }
 
+    Graph NewGraph {Graph("./undirected_weighted_graph.csv")};
+    Graph NewerGraph {PrimMST(NewGraph)};
+
+    for (const auto& SVP : NewerGraph.get_Adjacency_List()) {
+        for (const auto& TWP : SVP.second) {
+            
+        }
+    }
+
     return 0;
 }
