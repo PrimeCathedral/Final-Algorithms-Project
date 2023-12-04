@@ -4,10 +4,10 @@
 #include "Graph.hpp"
 
 // Getters
-const Vertices_Map& Graph::get_Vertices() const {
+Vertices_Map& Graph::get_Vertices() {
     return Vertices;
 }
-const Adjacency_List_Map& Graph::get_Adjacency_List() const {
+Adjacency_List_Map& Graph::get_Adjacency_List(){
     return Adjacency_List;
 }
 int Graph::get_graph_type() const {
@@ -27,11 +27,11 @@ void Graph::set_graph_type(int new_graph_type) {
 
 // Constructors
 Graph::Graph() : Vertices{}, Adjacency_List{}, graph_type{1} {};
-Graph::Graph(const Graph& to_copy) : Vertices{to_copy.get_Vertices()} {
+Graph::Graph(const Graph& to_copy) : Vertices{to_copy.Vertices} {
     // Deep copy the adjacency list
     Adjacency_List_Map New_Map;
     // for each key
-    for (const auto& Node_Vector_pair : to_copy.get_Adjacency_List()) {
+    for (const auto& Node_Vector_pair : to_copy.Adjacency_List) {
         // Find the value of the node being used as key
         // and find its corresponding node in the Vertices
         // Map, save the address of that vertex to be used 
