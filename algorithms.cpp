@@ -1,5 +1,6 @@
 #include <iostream>
 #include <deque>
+#include <list>
 #include "Graph.hpp"
 #include "Node.hpp"
 
@@ -164,7 +165,7 @@ Graph DFS(Graph& to_traverse) {
 
     return DFS;
 }
-bool DFS(const Graph& to_traverse){
+bool Cycle_DFS(const Graph& to_traverse){
     Graph DFS {to_traverse};
     bool is_cycled {false};
 
@@ -193,6 +194,7 @@ bool DFS(const Graph& to_traverse){
     return is_cycled; 
 }
 
+
 // Function to visualize the DFS tree contained in the graph
 // This function was made by ChatGPT
 void visualizeDFSTree(Graph& G) {
@@ -213,5 +215,71 @@ void visualizeDFSTree(Graph& G) {
 }
 
 bool CycleDetection(const Graph& to_detect) {
-    return DFS(to_detect);
+    return Cycle_DFS(to_detect);
 }
+
+Graph& DFS_visit(Graph& DFS, Node& source_node, int& time, std::list<Node*>& topo_list) {
+    // Mark the source node as visited and set initial time
+    source_node.set_color("gray");
+    source_node.set_init_time(++time);
+
+    // Debugging: Check if the source node's address is in the DFS adjacency list
+    if (DFS.get_Adjacency_List().find(&source_node) == DFS.get_Adjacency_List().end()) {
+        std::cout << "Source node has no adjacencies in DFS adjacency list." << std::endl;
+        std::cout << "Node address: " << &source_node << ", Value: " << source_node.get_value() << std::endl;
+    }
+
+    // Explore adjacent nodes
+    for (auto& vertex : DFS.get_Adjacency_List()[&source_node]) {
+        // Check if the adjacent node is not visited
+        if (vertex.first->get_color() == "white") {
+            // Set the source node as the predecessor of the adjacent node
+            vertex.first->set_predecesor(&source_node);
+
+            // Recursive call to DFS_visit for the adjacent node
+            DFS_visit(DFS, *vertex.first, time, topo_list);
+        }
+    }
+
+    // Mark the source node as fully explored and set final time
+    source_node.set_color("black");
+    source_node.set_final_time(++time);
+    topo_list.push_front(&source_node);
+    
+    return DFS;
+}
+
+Graph Topo_DFS(Graph& DFS, std::list<Node*>& topo_list) {
+    //Graph DFS {to_traverse};
+
+    for (auto& vertex : DFS.get_Vertices()) {
+        vertex.second.set_color("white");
+        vertex.second.set_predecesor(nullptr);
+    }
+
+    int time {0};
+
+    for (auto& vertex : DFS.get_Vertices()) {
+        if (vertex.second.get_color() == "white") {
+            DFS_visit(DFS, vertex.second, time, topo_list);
+        }
+    }
+
+    // std::cout << std::endl << "DFS Graph" << std::endl;
+    // for (auto& SVP : DFS.get_Vertices()) {
+    //     std::cout   << "Node address: "     << &SVP.second                   
+    //                 << ", Value: "          << SVP.second.get_value() 
+    //                 << ", Initial time: "   << SVP.second.get_init_time()
+    //                 << ", Final time: "     << SVP.second.get_final_time() 
+    //                 << std::endl;
+    // }
+
+    return DFS;  
+}
+
+std::list<Node*> TopologicalSort(Graph& to_create) {
+    std::list<Node*> Topo_List;
+    Topo_DFS(to_create, Topo_List);
+    return Topo_List;
+}
+

@@ -55,5 +55,13 @@ int main() {
     
     std::cout << bool(CycleDetection(DFS_Tree)) << std::endl;
 
+    std::list<Node*> MyList {TopologicalSort(CSV_graph)};
+
+    while(!MyList.empty()) {
+        std::cout << MyList.front()->get_value() << "->";
+        MyList.pop_front();
+        if(MyList.empty()) std::cout << "end" << std::endl;
+    }
+
     return 0;
 }
