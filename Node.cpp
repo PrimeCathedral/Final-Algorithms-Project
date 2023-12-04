@@ -53,9 +53,9 @@ void Node::set_is_removable(bool new_is_removable) {
 Node::Node() : value{0}, init_time{0}, final_time{0}, distance{MAX_DISTANCE}, color{"white"}, predecesor{nullptr}, is_removable{true} {}
 Node::Node(int new_value) : value{new_value}, init_time{0}, final_time{0}, distance{MAX_DISTANCE}, color{"white"}, predecesor{nullptr}, is_removable{true} {}
 Node::Node(const Node& to_copy) : value{to_copy.get_value()}, init_time{to_copy.get_init_time()}, final_time{to_copy.get_final_time()}, distance{to_copy.get_distance()}, color{to_copy.get_color()}, predecesor{to_copy.get_predecesor()}, is_removable{to_copy.get_is_removable()} {}
-Node::~Node() {
-  delete predecesor; // Keep an eye on this
-}
+// Node::~Node() {
+//   delete predecesor; // Keep an eye on this
+// }
 
 void Node::operator = (const Node& to_copy) {
   value         = to_copy.get_value();

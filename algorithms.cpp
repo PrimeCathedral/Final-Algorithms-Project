@@ -52,7 +52,7 @@ Graph BFS(Graph& to_traverse, Node& source_node) {
             if (Target_Weight_pair.first->get_color() == "white") {
                 Target_Weight_pair.first->set_color("gray");
                 Target_Weight_pair.first->set_distance(current_Node->get_distance() + 1);
-                // Target_Weight_pair.first->set_predecesor(Q.front()); // This line causes issues and is not necessary yet, so commented out
+                Target_Weight_pair.first->set_predecesor(Q.front()); // This line causes issues and is not necessary yet, so commented out
                 Target_Weight_pair.first->set_is_removable(false);
                 Q.push_back(Target_Weight_pair.first); // Might be an error here
             } else {
@@ -84,6 +84,7 @@ Graph BFS(Graph& to_traverse, Node& source_node) {
     }
 
     // Print the resulting adjacency list
+    std::cout << std::endl << "BFS GRAPH" << std::endl;
     for (const auto& Source_Vector_pair : BFS.get_Adjacency_List()) {
         for (const auto& Target_Weight_pair : Source_Vector_pair.second) {
             std::cout   << "Source: " << Source_Vector_pair.first->get_value()
@@ -94,4 +95,86 @@ Graph BFS(Graph& to_traverse, Node& source_node) {
 
     // Return the BFS graph
     return BFS;
+}
+
+
+// Function to perform DFS visit on a graph starting from a given source node
+// The function uses recursion to traverse the graph depth-first
+Graph& DFS_visit(Graph& DFS, Node& source_node, int& time) {
+    // Mark the source node as visited and set initial time
+    source_node.set_color("gray");
+    source_node.set_init_time(++time);
+
+    // Debugging: Check if the source node's address is in the DFS adjacency list
+    if (DFS.get_Adjacency_List().find(&source_node) == DFS.get_Adjacency_List().end()) {
+        std::cout << "Source node has no adjacencies in DFS adjacency list." << std::endl;
+        std::cout << "Node address: " << &source_node << ", Value: " << source_node.get_value() << std::endl;
+    }
+
+    // Explore adjacent nodes
+    for (auto& vertex : DFS.get_Adjacency_List()[&source_node]) {
+        // Check if the adjacent node is not visited
+        if (vertex.first->get_color() == "white") {
+            // Set the source node as the predecessor of the adjacent node
+            vertex.first->set_predecesor(&source_node);
+
+            // Recursive call to DFS_visit for the adjacent node
+            DFS_visit(DFS, *vertex.first, time);
+        }
+    }
+
+    // Mark the source node as fully explored and set final time
+    source_node.set_color("black");
+    source_node.set_final_time(++time);
+    
+    return DFS;
+}
+
+Graph DFS(Graph& to_traverse) {
+    Graph DFS {to_traverse};
+
+    for (auto& vertex : DFS.get_Vertices()) {
+        vertex.second.set_color("white");
+        vertex.second.set_predecesor(nullptr);
+    }
+
+    int time {0};
+
+    for (auto& vertex : DFS.get_Vertices()) {
+        if (vertex.second.get_color() == "white") {
+            DFS_visit(DFS, vertex.second, time);
+        }
+    }
+
+    std::cout << std::endl << "DFS Graph" << std::endl;
+    for (auto& SVP : to_traverse.get_Vertices()) {
+        std::cout   << "Node address: "     << &SVP.second                   
+                    << ", Value: "          << SVP.second.get_value() 
+                    << ", Initial time: "   << SVP.second.get_init_time()
+                    << ", Final time: "     << SVP.second.get_final_time() 
+                    << std::endl;
+    }
+
+    return DFS;
+}
+
+// Function to visualize the DFS tree contained in the graph
+// This function was made by ChatGPT
+void visualizeDFSTree(Graph& G) {
+    std::cout << "DFS Tree Visualization:" << std::endl;
+
+    for (auto& vertex : G.get_Vertices()) {
+        Node& current_node = vertex.second;
+        Node* predecessor = current_node.get_predecesor();
+
+        // Print node value and its predecessor's value (if any)
+        std::cout << "Node " << vertex.second.get_value() << " ";
+        if (predecessor) {
+            std::cout << "← " << current_node.get_predecesor()->get_value();
+        } else {
+            std::cout << "(Root)";
+        }
+
+        std::cout << std::endl;
+    }
 }

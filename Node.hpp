@@ -34,7 +34,7 @@ class Node {
     Node();
     Node(int new_value);
     Node(const Node& to_copy);
-    ~Node();
+    // ~Node();
 
     // Methods
     void operator = (const Node& to_copy);

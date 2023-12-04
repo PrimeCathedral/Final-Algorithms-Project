@@ -47,6 +47,10 @@ int main() {
 
     // std::cout << std::endl << "BFS TREE" << std::endl << std::endl;
     Graph BFS_Tree {BFS(CSV_graph, CSV_graph.get_Vertices()[4])};
+    Graph DFS_Tree {DFS(CSV_graph)};
+
+
+    visualizeDFSTree(DFS_Tree);
     // std::cout << "Here?" << std::endl;
     return 0;
 }
