@@ -55,5 +55,7 @@ class Graph {
         Graph();
         Graph(const Graph& to_copy);
         Graph(std::string path_to_csv);
+
+        friend std::ostream& operator << (std::ostream& os, const Graph& graph);
 };
 #endif

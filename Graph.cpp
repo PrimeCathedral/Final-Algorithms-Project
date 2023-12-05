@@ -141,3 +141,25 @@ Graph::Graph(std::string path_to_csv) {
     // Close the file
     csv_file.close();
 }
+
+std::ostream& operator << (std::ostream& os, const Graph& graph) {
+    // for (const auto& SVP : graph.get_Adjacency_List()) {
+    //     for (const auto& TWP : SVP.second) {
+    //         os  << " Source: " << SVP.first->get_value()
+    //             << " Target: " << TWP.first->get_value()
+    //             << " Weight: " << TWP.second <<std::endl;
+    //     }
+    // }
+
+    for (auto& KVP : graph.get_Vertices()) {
+        KVP.second.get_value();
+        os  << " Value:"        << KVP.second.get_value()                       << std::endl
+            << " Color:"        << KVP.second.get_color()                       << std::endl
+            << " Distance:"     << KVP.second.get_distance()                    << std::endl
+            << " Final Time:"   << KVP.second.get_final_time()                  << std::endl
+            << " Initial Time:" << KVP.second.get_init_time()                   << std::endl
+            << " Is removable:" << KVP.second.get_is_removable()                << std::endl
+            << " Predecesor:"   << KVP.second.get_predecesor()->get_value()     << std::endl;
+    }
+    return os;
+}

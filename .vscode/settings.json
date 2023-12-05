@@ -59,6 +59,8 @@
         "algorithm": "cpp",
         "list": "cpp",
         "__tree": "cpp",
-        "set": "cpp"
+        "set": "cpp",
+        "queue": "cpp",
+        "unordered_set": "cpp"
     }
 }
